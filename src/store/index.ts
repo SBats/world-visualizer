@@ -6,20 +6,27 @@ Vue.use(Vuex);
 export class Entity {
   id: string = Date.now().toString();
   name!: string;
-  groups: Set<Group["id"]> = new Set();
+  parents: Set<Group["id"]> = new Set();
 
-  constructor(entity: Partial<Entity>) {
-    Object.assign(this, entity);
+  constructor(params: {
+    name: Entity["name"];
+    parents?: Set<Group["id"]> | Array<Group["id"]>;
+  }) {
+    this.name = params.name;
   }
 }
 
 export class Group {
   id: string = Date.now().toString();
   name!: string;
-  children: Set<Group["id"] | Entity["id"]> = new Set();
+  parents: Set<Group["id"]> = new Set();
 
-  constructor(group: Partial<Group>) {
-    Object.assign(this, group);
+  constructor(params: {
+    name: Entity["name"];
+    parents?: Set<Group["id"]> | Array<Group["id"]>;
+  }) {
+    this.name = params.name;
+    this.parents = new Set(params.parents);
   }
 }
 
@@ -31,19 +38,16 @@ interface State {
 export default new Vuex.Store({
   state: {
     groups: {},
-    entities: {}
+    entities: {},
   } as State,
   mutations: {
     createGroup(state, group: Group) {
       state.groups[group.id] = group;
     },
     createEntity(state, entity: Entity) {
-      state.entities[entity.id] = new Entity(entity);
-      entity.groups.forEach(groupId => {
-        state.groups[groupId].children.add(entity.id);
-      });
-    }
+      state.entities[entity.id] = entity;
+    },
   },
   actions: {},
-  modules: {}
+  modules: {},
 });
