@@ -37,6 +37,14 @@ export class Group extends Entity {
   }
 }
 
+function initGraph(): Graph {
+  const graph = new Graph();
+  graph.nodes(EntitiesType.GROUP).createIndex("id");
+  graph.nodes(EntitiesType.CHARACTER).createIndex("id");
+  graph.edges(Relations.PART_OF).createIndex("id");
+  return graph;
+}
+
 interface State {
   graph?: Graph;
 }
@@ -47,13 +55,11 @@ export default new Vuex.Store({
   } as State,
   mutations: {
     addEntity(state, { entity, groups }: { entity: Entity; groups: Group[] }) {
-      const graph = state.graph || new Graph();
+      const graph = state.graph || initGraph();
       const node = graph.createNode(entity.type, entity);
-      const groupsNodes = groups.map((group) => {
-        const graphGroups = graph.nodes(EntitiesType.GROUP);
-        graphGroups.createIndex("id");
-        return graphGroups.find(group.id);
-      });
+      const groupsNodes = groups.map((group) =>
+        graph.nodes(EntitiesType.GROUP).find(group.id)
+      );
       groupsNodes.forEach((groupNode) => {
         graph
           .createEdge(Relations.PART_OF, {
