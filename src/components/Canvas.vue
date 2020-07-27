@@ -13,7 +13,7 @@ import { Graph } from "ug-ts";
 
 @Component
 export default class Canvas extends Vue {
-  @Getter("graph") graph: Graph | undefined;
+  @Getter("graph") graph!: Graph;
 
   private stageConfig = {
     width: 200,
@@ -21,16 +21,18 @@ export default class Canvas extends Vue {
   };
 
   private entityConfig = {
-    x: 100,
-    y: 100,
-    radius: 70,
+    x: 40,
+    y: 40,
+    radius: 20,
     fill: "red",
     stroke: "black",
-    strokeWidth: 4,
+    strokeWidth: 1,
   };
 
-  updated() {
-    console.log(this.graph);
+  created() {
+    if (this.graph) {
+      console.log(this.graph);
+    }
   }
 }
 </script>
