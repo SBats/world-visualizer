@@ -14,11 +14,12 @@ enum Relations {
 }
 
 abstract class Entity {
-  id: string = Date.now().toString();
+  id!: string;
   name!: string;
   type!: EntitiesType;
 
   constructor(params: { name: Entity["name"]; type: Entity["type"] }) {
+    this.id = `${params.type}_${Date.now().toString()}`;
     this.name = params.name;
     this.type = params.type;
   }
@@ -54,7 +55,11 @@ export default new Vuex.Store({
         return graphGroups.find(group.id);
       });
       groupsNodes.forEach((groupNode) => {
-        graph.createEdge(Relations.PART_OF).link(node, groupNode);
+        graph
+          .createEdge(Relations.PART_OF, {
+            id: `${node.properties.id}_PART_OF_${groupNode.properties.id}`,
+          })
+          .link(node, groupNode);
       });
       Vue.set(state, "graph", graph);
     },
