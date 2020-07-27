@@ -3,8 +3,8 @@
     <Canvas />
     <div>
       <ul>
-        <li v-for="entity in entities" :key="entity.id">
-          {{ entity.name }}
+        <li v-for="character in characters" :key="character.id">
+          {{ character.name }}
         </li>
       </ul>
       <ul>
@@ -19,12 +19,14 @@
 <script lang="ts">
 import Canvas from "@/components/Canvas.vue";
 import { Component, Vue } from "vue-property-decorator";
+import { Getter } from "vuex-class";
+import { Character, Group } from "../store";
 
 @Component({
-  components: { Canvas }
+  components: { Canvas },
 })
 export default class Home extends Vue {
-  private entities = Object.values(this.$store.state.entities) || [];
-  private groups = Object.values(this.$store.state.groups) || [];
+  @Getter("characters") characters: Character[] | undefined;
+  @Getter("groups") groups: Group[] | undefined;
 }
 </script>
