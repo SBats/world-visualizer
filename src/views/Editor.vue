@@ -36,7 +36,7 @@ export default class Editor extends Vue {
   newGroup = { name: "", parents: [] };
   newCharacter = { name: "", parents: [] };
 
-  @Getter("groups") groups: Group[] | undefined;
+  @Getter("groups") groups!: Group[];
 
   createGroup() {
     this.$store.commit("addEntity", {

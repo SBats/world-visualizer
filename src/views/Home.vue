@@ -26,7 +26,7 @@ import { Character, Group } from "../store";
   components: { Canvas },
 })
 export default class Home extends Vue {
-  @Getter("characters") characters: Character[] | undefined;
-  @Getter("groups") groups: Group[] | undefined;
+  @Getter("characters") characters!: Character[];
+  @Getter("groups") groups!: Group[];
 }
 </script>
