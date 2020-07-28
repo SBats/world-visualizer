@@ -7,7 +7,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import Vue from "vue";
+import Component from "vue-class-component";
 import { Getter } from "vuex-class";
 import { Graph } from "ug-ts";
 

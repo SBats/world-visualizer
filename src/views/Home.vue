@@ -18,7 +18,8 @@
 
 <script lang="ts">
 import Canvas from "@/components/Canvas.vue";
-import { Component, Vue } from "vue-property-decorator";
+import Vue from "vue";
+import Component from "vue-class-component";
 import { Getter } from "vuex-class";
 import { Character, Group } from "../store";
 

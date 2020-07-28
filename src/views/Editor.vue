@@ -25,7 +25,8 @@
 
 <script lang="ts">
 import Multiselect from "vue-multiselect";
-import { Vue, Component } from "vue-property-decorator";
+import Vue from "vue";
+import Component from "vue-class-component";
 import { Getter } from "vuex-class";
 import { Group, Character } from "@/store";
 
