@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { Graph, Unit } from "ug-ts";
+import { Graph, Edge, Node as GraphNode } from "ug-ts";
+import { GraphData } from "force-graph";
 
 Vue.use(Vuex);
 
@@ -81,7 +82,9 @@ export default new Vuex.Store({
             .nodes(EntitiesType.CHARACTER)
             .query()
             .units()
-            .map((unit: Unit<Character>) => ({ ...unit.properties }));
+            .map((character: GraphNode<Character, Group>) => ({
+              ...character.properties,
+            }));
     },
     groups: (state) => {
       return !state.graph
@@ -90,7 +93,39 @@ export default new Vuex.Store({
             .nodes(EntitiesType.GROUP)
             .query()
             .units()
-            .map((unit: Unit<Group>) => ({ ...unit.properties }));
+            .map((group: GraphNode<Group, Group>) => ({ ...group.properties }));
+    },
+    partOfLinks: (state) => {
+      return !state.graph
+        ? []
+        : state.graph
+            .edges(Relations.PART_OF)
+            .query()
+            .units()
+            .map((link: Edge<Group | Character, Group>) => ({
+              source: link.inputNode.properties.id,
+              target: link.outputNode.properties.id,
+            }));
+    },
+    formattedGraph: (state, getters): GraphData => {
+      const parsedGraph: GraphData = { nodes: [], links: [] };
+      if (state.graph) {
+        const groupNodes = getters.groups.map((group: Group) => ({
+          ...group,
+          val: 10,
+          color: "red",
+        }));
+        const characterNodes = getters.characters.map(
+          (character: Character) => ({
+            ...character,
+            val: 2,
+          })
+        );
+        const partOfLinks = getters.partOfLinks;
+        parsedGraph.nodes = [...groupNodes, ...characterNodes];
+        parsedGraph.links = partOfLinks;
+      }
+      return parsedGraph;
     },
   },
   actions: {},
