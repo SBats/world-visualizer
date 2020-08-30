@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { Graph, Edge, Node as GraphNode } from "ug-ts";
-import { GraphData } from "force-graph";
+import { Graph, Edge, Node } from "ug-ts";
+// import { GraphData } from "force-graph";
 
 Vue.use(Vuex);
 
@@ -82,7 +82,7 @@ export default new Vuex.Store({
             .nodes(EntitiesType.CHARACTER)
             .query()
             .units()
-            .map((character: GraphNode<Character, Group>) => ({
+            .map((character: Node<Character, Group>) => ({
               ...character.properties,
             }));
     },
@@ -93,7 +93,7 @@ export default new Vuex.Store({
             .nodes(EntitiesType.GROUP)
             .query()
             .units()
-            .map((group: GraphNode<Group, Group>) => ({ ...group.properties }));
+            .map((group: Node<Group, Group>) => ({ ...group.properties }));
     },
     partOfLinks: (state) => {
       return !state.graph
@@ -107,26 +107,26 @@ export default new Vuex.Store({
               target: link.outputNode.properties.id,
             }));
     },
-    formattedGraph: (state, getters): GraphData => {
-      const parsedGraph: GraphData = { nodes: [], links: [] };
-      if (state.graph) {
-        const groupNodes = getters.groups.map((group: Group) => ({
-          ...group,
-          val: 10,
-          color: "red",
-        }));
-        const characterNodes = getters.characters.map(
-          (character: Character) => ({
-            ...character,
-            val: 2,
-          })
-        );
-        const partOfLinks = getters.partOfLinks;
-        parsedGraph.nodes = [...groupNodes, ...characterNodes];
-        parsedGraph.links = partOfLinks;
-      }
-      return parsedGraph;
-    },
+    // formattedGraph: (state, getters): GraphData => {
+    //   const parsedGraph: GraphData = { nodes: [], links: [] };
+    //   if (state.graph) {
+    //     const groupNodes = getters.groups.map((group: Group) => ({
+    //       ...group,
+    //       val: 10,
+    //       color: "red",
+    //     }));
+    //     const characterNodes = getters.characters.map(
+    //       (character: Character) => ({
+    //         ...character,
+    //         val: 2,
+    //       })
+    //     );
+    //     const partOfLinks = getters.partOfLinks;
+    //     parsedGraph.nodes = [...groupNodes, ...characterNodes];
+    //     parsedGraph.links = partOfLinks;
+    //   }
+    // return parsedGraph;
+    // },
   },
   actions: {},
   modules: {},

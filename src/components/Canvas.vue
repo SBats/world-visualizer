@@ -18,12 +18,15 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { Getter } from "vuex-class";
-import ForceGraph, { ForceGraphInstance, GraphData } from "force-graph";
+// import { GraphData } from "force-graph";
+import { Node } from "ug-ts";
+import Konva from "konva";
+import { Group } from "@/store";
 
 @Component
 export default class Canvas extends Vue {
-  @Getter("formattedGraph") graph!: GraphData;
-  forceGraph?: ForceGraphInstance;
+  @Getter("groups") groups!: Array<Node<Group, Group>["properties"]>;
+  // forceGraph?: ForceGraphInstance;
   // private stageConfig = {
   //   width: 200,
   //   height: 200,
@@ -39,21 +42,43 @@ export default class Canvas extends Vue {
   // };
 
   mounted() {
-    if (this.graph) {
-      console.log(this.graph);
-      this._drawGraph(this.graph);
+    if (this.groups) {
+      this._drawGraph(this.groups);
     }
   }
 
-  private _drawGraph(graph: GraphData) {
+  private _drawGraph(groups: Array<Node<Group, Group>["properties"]>) {
     const container = document.getElementById("graph-container");
     if (!container) return;
-    this.forceGraph = ForceGraph();
-    this.forceGraph(container)
-      .width(container.clientWidth)
-      .height(container.clientHeight)
-      .linkDirectionalParticles(2)
-      .graphData(graph);
+    // this.forceGraph = ForceGraph();
+    // this.forceGraph(container)
+    //   .width(container.clientWidth)
+    //   .height(container.clientHeight)
+    //   .linkDirectionalParticles(2)
+    //   .graphData(graph);
+    console.log(groups);
+    const stage = new Konva.Stage({
+      container: "graph-container", // id of container <div>
+      width: 500,
+      height: 500,
+    });
+
+    const layer = new Konva.Layer();
+    stage.add(layer);
+
+    groups.forEach((group, index) => {
+      const circle = new Konva.Circle({
+        x: 60 * (index + 1),
+        y: 60,
+        radius: 30,
+        stroke: "black",
+        strokeWidth: 4,
+      });
+
+      layer.add(circle);
+    });
+
+    stage.draw();
   }
 }
 </script>
